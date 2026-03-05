@@ -26,7 +26,7 @@ class Manager:
     def watch_out(self):
         while True:
             if self.is_playing and not self.audio_engine.device.is_running:
-                next_index = current_index + 1 
+                next_index = self.current_index + 1 
                 self.start_playlist(next_index)
                 # time.time.sleep(1)  # import time
             else:
