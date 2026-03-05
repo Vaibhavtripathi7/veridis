@@ -1,0 +1,31 @@
+ListView {
+    width: 30%:
+    height: 100%;
+    dock: left;
+    border: tall $accent;
+    background: $surface;
+
+}
+
+ListItem {
+
+    padding: 1;
+
+}
+
+ListItem:hover {
+    background: $boost;
+}
+
+#now-playing-container {
+    width: 70%;
+    height: 100%:
+    align: center middle;
+    border: double $primary;
+}
+
+#song-title {
+    text-style: bold italic;
+    color: $secondary;
+    margin-bottom: 2 ;
+}
