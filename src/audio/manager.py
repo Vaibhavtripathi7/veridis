@@ -9,34 +9,62 @@ class Manager:
         self.music_files = MusicFiles()
         self.current_index = None
         self.is_playing = False 
-        # self.thread_ = threading.Thread()
+        self.autoplay_enabled = True
+        self._thread_started = False
 
     def start_playlist(self, index):
-        list_of_files = self.music_files.scanfiles()
-        song_path = list_of_files[index]
+        self.audio_engine.Pause()
+        song_path = self.music_files.get_full_path(index)
         # print(song_path)
         self.current_index = index
         self.audio_engine.Play(str(song_path))
         self.is_playing = True
     
-    def start_thread(self, watch_out):
-        t_thread = threading.Thread(target = self.watch_out, daemon = True)
-        t_thread.start()
+
+    def next_song(self):
+        total_songs = len(self.music_files.all_files)
+        if total_songs > 0 :
+            new_index = ( self.current_index + 1 ) % total_songs
+            self.start_playlist(new_index)
+
+    def pause_song(self):
+        if self.audio_engine.device.running:
+
+            self.audio_engine.Pause()
+        else:
+            self.audio_engine.Resume()
+
+
+    def start_thread(self):
+        if not self._thread_started:
+
+            t_thread = threading.Thread(target = self.watch_out, daemon = True)
+            t_thread.start()
+            self._thread_started = True 
 
     def watch_out(self):
         while True:
-            if self.is_playing and not self.audio_engine.device.is_running:
-                next_index = self.current_index + 1 
-                self.start_playlist(next_index)
-                # time.time.sleep(1)  # import time
-            else:
-                print("end of playlist")
-                self.is_playing = False 
-            
-            time.time.sleep(1)
+            if self.is_playing: 
+                if not self.audio_engine.device.running and not self.audio_engine.is_paused:
+                    self.is_playing = False
+                    self.audio_engine.reset_state()
+                    if self.autoplay_enabled:
+                        self.next_song() 
+            time.sleep(0.3)
+
+    def get_progress_percentage(self):
+        return self.audio_engine.get_progress()
+
+    def play_by_path(self, path):
+        """Play a specific file path directly from the browser."""
+        self.audio_engine.Play(str(path))
+        self.is_playing = True
+        # Note: You'll need to update self.current_index logic 
+        # if you still want 'next_song' to work from here.
+        
 if __name__ == '__main__':
     object1 = Manager()
     object1.start_playlist(1)
-    # object1.audio_engine.Play('/home/vaibahv/Downloads/samajwadi.mp3')
+    object1.start_thread()
     input("enter to exit!")
     object1.audio_engine.close()
