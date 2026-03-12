@@ -3,7 +3,7 @@ from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical, Container
 from textual.widgets import Footer, Header, Button
 from textual.widgets import Static, ListItem, ListView, Label, ProgressBar 
-from src.audio.manager import Manager
+from src.music_player.audio.manager import Manager
 from textual.reactive import reactive
 import random
 
@@ -20,12 +20,10 @@ class AudioPlayer(App):
     ]
 
     CSS_PATH = "style.tcss"
-    # list_of_songs: list = reactive([])
 
     def on_mount(self) -> None:
         self.manager = Manager()
         self.manager.start_thread()
-        # self.list_of_songs = self.manager.music_files.get_file()
         self.navigate_to(self.manager.music_files.root_path)
         self.set_interval(0.5, self.update_progress)
 
@@ -46,15 +44,12 @@ class AudioPlayer(App):
                 list_view.append(ListItem(Label(item["name"])))
 
     def on_list_view_selected(self, event: ListView.Selected) -> None:
-            # 1. Get the data for the selected row
             index = event.list_view.index
             selected_item = self.current_dir_items[index]
 
             if selected_item["is_dir"]:
-                # 2. If it's a folder, navigate inside
                 self.navigate_to(selected_item["path"])
             else:
-                # 3. If it's a song, play it
                 self.manager.play_by_path(selected_item["path"])
                 self.query_one("#now-playing").update(f"🎶 {selected_item['path'].name}")
 
@@ -69,22 +64,20 @@ class AudioPlayer(App):
                 yield Visualizer(id="Visualizer")
                 yield Label("No song playing", id="now-playing")
             with Container(id="footer-zone"):
-                yield Label("00:00", id="time-elapsed") # Left side
+                yield Label("00:00", id="time-elapsed") 
                 yield ProgressBar(total=100, show_eta = False, show_bar=True, id="progress")
-                yield Label("00:00", id="time-total")   # Right side
+                yield Label("00:00", id="time-total")   
         yield Footer()
         
 
     def update_progress(self):
             if hasattr(self, 'manager'):
-                # Update the Bar
                 if not self.manager.is_playing:
                     self.query_one("#progress", ProgressBar).progress = 0
                     self.query_one("#time-elapsed").update("00:00")
                     self.query_one("#time-total").update("00:00")
                     return 
                 self.query_one("#progress", ProgressBar).progress = self.manager.get_progress_percentage()
-                    
                 elapsed_str, total_str = self.manager.audio_engine.get_time_strings()
                 self.query_one("#time-elapsed").update(elapsed_str)
                 self.query_one("#time-total").update(total_str)

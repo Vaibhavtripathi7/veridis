@@ -1,5 +1,5 @@
-from src.audio.audio import AudioEngine
-from src.library.musicfileman import MusicFiles
+from src.music_player.audio.audio import AudioEngine
+from src.music_player.library.musicfileman import MusicFiles
 import threading
 import time
 from typing import Optional

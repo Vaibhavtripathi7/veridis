@@ -1,7 +1,6 @@
 import sys
 from pathlib import Path
 
-# This line ensures Python can find your 'src' folder
 sys.path.append(str(Path(__file__).parent))
 
 from src.interface.tui import AudioPlayer
