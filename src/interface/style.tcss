@@ -1,31 +1,108 @@
-ListView {
-    width: 30%:
-    height: 100%;
-    dock: left;
-    border: tall $accent;
-    background: $surface;
+/* Global variables for easy tweaking */
+$accent-color: #00FF00; /* Neon Green */
+$bg-panel: #121212;
 
+Screen {
+    background: #080808;
+}
+
+#sidebar {
+    width: 35%;
+    height: 100%;
+    background: $bg-panel;
+    border: tall $accent-color;
+    border-title-align: left;
+    margin: 1 0 1 1; /* Top Right Bottom Left */
+}
+
+#sidebar-title {
+    width: 100%;
+    height: 3;
+    content-align: center middle;
+    text-style: bold;
+    background: $accent-color;
+    color: black;
+}
+
+#song-list {
+    height: 1fr;
+    background: transparent;
 }
 
 ListItem {
-
-    padding: 1;
-
+    padding: 0 1;
+    color: #AAAAAA;
 }
 
 ListItem:hover {
-    background: $boost;
+    background: $accent-color 15%;
+    color: $accent-color;
+    text-style: bold;
 }
 
-#now-playing-container {
-    width: 70%;
-    height: 100%:
-    align: center middle;
+#main-zone {
+    width: 65%;
+    height: 100%;
     border: double $primary;
+    margin: 1;
+    align: center middle;
 }
 
-#song-title {
+#Visualizer {
+    height: 50%;
+    width: 80%;
+    color: $accent-color;
+    content-align: center bottom;
+    text-style: bold;
+    /* This makes the bars look like a cohesive block */
+    padding: 1 2; 
+}
+
+#now-playing {
+    width: 90%;
+    height: 3;
+    content-align: center middle;
     text-style: bold italic;
     color: $secondary;
-    margin-bottom: 2 ;
+    border-top: dashed $primary;
+    margin-top: 1;
+}
+
+#footer-zone {
+    layout: horizontal;
+    height: 3;
+    content-align: center middle;
+    dock: bottom;
+    background: #1a1a1a;
+    padding: 0 2;
+    align: center middle
+}
+
+#progress {
+    width: 1fr;
+    color: $accent-color;
+    margin: 1 2;
+}
+
+#progress > .progress--label {
+    padding: 0 1;
+    color: $accent;
+    text-style: bold;
+}
+
+.progress--bar {
+    color: $accent;
+    background: $accent 20%;
+}
+
+#main-zone {
+    border: double $primary;
+    border-title-align: center;
+}
+#time-elapsed, #time-total {
+    width: 7;
+    text-align: center;
+    margin: 0 1;
+    color: $accent;
+    text-style: bold;
 }

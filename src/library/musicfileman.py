@@ -98,7 +98,15 @@ class MusicFiles:
             pass
             
         return folders + files
-        
+    
+    def get_index_by_path(self, path) -> Optional[int]
+        """Finds where a file sits in playlist(CWD)"""
+        try:
+            rel_path = str(path.resolve().relative_to(self.root_path))
+            return self.all_files.index(rel_path)
+        except (ValueError, RuntimeError):
+            return None 
+
 
 if __name__ == '__main__':
     mp3 = MusicFiles()
