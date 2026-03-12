@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "gamma"
+version = "0.1.0"
+description = "A CLI music player built with miniaudio and Textual"
+authors = ["Vaibhavtripathi7 <vaibhavtripathi2020@outlook.com>"]
+license = "MIT"
+readme = "README.md"
+
+packages = [{include = "music_player", from = "src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.13,<4.0"
+textual = ">=0.80.0"
+miniaudio = "^1.59"
+
+[tool.poetry.scripts]
+gamma = "music_player.__main__:main"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
