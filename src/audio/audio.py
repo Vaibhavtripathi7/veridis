@@ -1,66 +1,77 @@
 import miniaudio 
 import time
-
+from typing import Tuple
 
 
 class AudioEngine:
+
+    """ 
+    High perforance audio backend using miniaudio and system-time tracking,
+    This class hanldes low-level playback, state management and time calculations.
+    """
     def __init__(self):
         self.device = miniaudio.PlaybackDevice()
-        self.is_paused = False
         self.stream = None
         self.total_frames = 0
         self.sample_rate = 0
+        self.is_paused = False
+        self.start_time = 0.0
+        self.elapsed_before_pause = 0.0
 
-        self.start_time = 0
-        self.elapsed_before_pause = 0
-
-
-    def load(self,file_path : str):
-        self.stream = miniaudio.stream_file(file_path)
-        
-
-    def Play(self, file_path : str):
-        if self.device == None:
-            raise RuntimeError('Device is not initialized')
-        elif self.stream is not None:
-            self.device.stop()
+    def Play(self, file_path : str) -> None:
+        """Loads and starts playback for a specific file using its file path"""
 
         self.reset_state()
-        info = miniaudio.get_file_info(file_path)
-        self.total_frames = info.num_frames
-        self.sample_rate = info.sample_rate
 
-        self.elapsed_before_pause = 0
-        self.start_time = time.time()
-        self.load(file_path)
-        
-        # def stream_generator():
-            # for chunk in self.stream:
-                # self.current_frame +=  len(chunk) //4
-                # yield chunk
+        try: 
 
-        # wrapped_stream = self.progress_wrapper(self.stream)
-        self.device.start(self.stream)
-        self.is_paused = False
+            info = miniaudio.get_file_info(file_path)
+            self.total_frames = info.num_frames
+            self.sample_rate = info.sample_rate
+            self.elapsed_before_pause = 0.0
+
+            self.stream = miniaudio.stream_file(file_path)
+            self.start_time = time.time()
+            self.device.start(self.stream)
+
+            self.is_paused = False
+
+        except FileNotFoundError: 
+            raise FileNotFoundError(f"Audio file not found")
+        except Exception as e:
+            raise RuntimeError(f"Could not play: {e}")
         
-    def Pause(self):
+    def Pause(self) -> None:
+        """Pauses Playback and saves the time passed"""
         if self.device.running and not self.is_paused:
             self.elapsed_before_pause += (time.time() - self.start_time)
-            self.pause_time = time.time()
+            # self.pause_time = time.time()
             self.is_paused = True
             self.device.stop()
 
-    def Resume(self):
+    def Resume(self) -> None:
+        """ Resumes the playback from the point that it was paused"""
         if self.is_paused and self.stream:
             self.start_time = time.time()
             self.device.start(self.stream)
             self.is_paused = False
+        
+    def reset_state(self):
+        if self.device.running:
+            self.device.stop()
+        self.start_time = 0
+        self.elapsed_before_pause = 0
+        self.total_frames = 0
+        self.is_paused = False
 
-    def close(self):
+
+    def close(self) -> None:
+        """ Releases Playbackdevice"""
         self.device.stop()
         self.device.close()
 
-    def get_progress(self):
+    def get_progress(self) -> float:
+        """Returns playback progress in percentage"""
         if self.total_frames == 0 or not self.device.running:
             return 0
             
@@ -70,12 +81,11 @@ class AudioEngine:
             
         duration = self.total_frames / self.sample_rate
         
-        # Float math first, then multiply
         percent = (elapsed / duration) * 100
         return min(max(percent, 0), 100)
 
     def get_time_strings(self):
-        """Returns (elapsed_str, total_str)"""
+        """Returns (elapsed_str, total_str) -- for UI"""
 
         if self.total_frames == 0 or self.sample_rate == 0:
             return "00:00", "00:00"
@@ -96,14 +106,6 @@ class AudioEngine:
             return f"{mins:02}:{secs:02}"
             
         return fmt(curr), fmt(total_seconds)
-
-    def reset_state(self):
-        if self.device.running:
-            self.device.stop()
-        self.start_time = 0
-        self.elapsed_before_pause = 0
-        self.total_frames = 0
-        self.is_paused = False
 
 
 if __name__ == '__main__':
