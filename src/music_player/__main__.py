@@ -1,10 +1,8 @@
-import sys
-from pathlib import Path
+from .interface.tui import AudioPlayer
 
-sys.path.append(str(Path(__file__).parent))
-
-from src.interface.tui import AudioPlayer
-
-if __name__ == "__main__":
+def main():
     app = AudioPlayer()
     app.run()
+
+if __name__ == "__main__":
+    main()
