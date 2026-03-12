@@ -59,6 +59,47 @@ class MusicFiles:
             self.save_cache()
 
 
+    def get_full_path(self,index) -> Optional[Path]:
+        """Retrives absolute Path object of using index"""
+        if 0 <= index < len(self.all_files):
+            relative_path_str = self.all_files[index]
+            return self.root_path / relative_path_str
+        return None
+
+    def get_view_for_path(self, target_path: Path) -> List[Dict[str, Union[str, Path, bool]]]:
+        """Returns a list of folders and music files in the target directory."""
+        folders = []
+        files = []
+        
+        if target_path != self.root_path:
+            folders.append({
+                "name": "⬅ .. [Back]", 
+                "path": target_path.parent, 
+                "is_dir": True
+            })
+
+        try:
+            for p in sorted(target_path.iterdir()):
+                if p.name.startswith('.'): continue
+                
+                if p.is_dir():
+                    folders.append({
+                        "name": f"📁 {p.name}", 
+                        "path": p, 
+                        "is_dir": True
+                    })
+                elif p.suffix.lower() in self.allowed:
+                    files.append({
+                        "name": f"🎵 {p.name}", 
+                        "path": p, 
+                        "is_dir": False
+                    })
+        except PermissionError:
+            pass
+            
+        return folders + files
+        
+
 if __name__ == '__main__':
     mp3 = MusicFiles()
     # list1 = mp3.scanfiles()
