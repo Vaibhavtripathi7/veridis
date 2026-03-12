@@ -99,7 +99,7 @@ class MusicFiles:
             
         return folders + files
     
-    def get_index_by_path(self, path) -> Optional[int]
+    def get_index_by_path(self, path) -> Optional[int]:
         """Finds where a file sits in playlist(CWD)"""
         try:
             rel_path = str(path.resolve().relative_to(self.root_path))
