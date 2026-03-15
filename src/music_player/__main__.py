@@ -1,9 +1,9 @@
-from .interface.tui import AudioPlayer
+from .interface.tui import VeridisTune
 import time 
 def main():
     time.sleep(0.1)
     try:
-        app = AudioPlayer()
+        app = VeridisTune()
         app.run()
     except Exception as e:
         print(f"{e}", file=sys.stderr)

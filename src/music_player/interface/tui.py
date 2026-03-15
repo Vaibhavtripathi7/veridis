@@ -9,7 +9,7 @@ import random
 
 
 
-class AudioPlayer(App):
+class VeridisTune(App):
 
     current_dir_items = reactive([])
 
