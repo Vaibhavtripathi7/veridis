@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "veridis"
-version = "0.1.0"
+version = "0.1.1"
 description = "A fast, lightweight CLI music player built with miniaudio and Textual"
 authors = ["Vaibhavtripathi7 <vaibhavtripathi2020@outlook.com>"]
 license = "MIT"
