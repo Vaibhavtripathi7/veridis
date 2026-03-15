@@ -25,7 +25,7 @@ class AudioPlayer(App):
         self.manager = Manager()
         self.manager.start_thread()
         self.navigate_to(self.manager.music_files.root_path)
-        self.set_interval(0.2, self.update_progress)
+        self.set_interval(0.5, self.update_progress)
 
     def navigate_to(self, path):
         self.current_dir_items = self.manager.music_files.get_view_for_path(path)
@@ -92,7 +92,7 @@ class AudioPlayer(App):
 
 class Visualizer(Static):
     def on_mount(self):
-        self.set_interval(0.5, self.update_bars)
+        self.set_interval(0.08, self.update_bars)
 
     def update_bars(self):
         if hasattr(self.app, "manager") and self.app.manager.is_playing:
