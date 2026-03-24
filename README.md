@@ -60,7 +60,7 @@ Ensure you have **Poetry** installed.
 
 ```bash
 # Clone the repository
-git clone [https://github.com/Vaibhavtripathi7/veridis](https://github.com/Vaibhavtripathi7/veridis)
+git clone https://github.com/Vaibhavtripathi7/veridis.git
 cd py-cli-music-player
 
 # Install dependencies using poetry
