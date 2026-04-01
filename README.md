@@ -51,24 +51,34 @@ choco install visualcpp-build-tools
 
 ### 2. Option A: Quick install (via PyPI)
 ```bash
+
 pip install veridis
+
+# If environment confilct problem occurs then try (recommended):
+# Install pipx, if you don't have that:
+
+sudo pacman -S python-pipx  # EndeavourOS/Arch
+sudo apt install pipx       # Debian/Ubuntu
+
+pipx install veridis
+# After installation, launch by simply typing:
+veridis
 ```
 
-### 3. Option B: Build and Install
+### 3. Option B: Build and Install (Dev Mode)
 
 Ensure you have **Poetry** installed.
 
 ```bash
 # Clone the repository
 git clone https://github.com/Vaibhavtripathi7/veridis.git
-cd py-cli-music-player
-
+cd veridis
 # Install dependencies using poetry
 poetry install
 ```
 ### 4. Execution 
 ```Bash
-poetry run veridis
+poetry run veridis 
 ```
 
 ## Control Interface
